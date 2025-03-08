@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Dinâmica</title>
+    <style>
+        body {font-family: Arial, sans-serif; margin: 20px;}
+        input, button {margin: 5px;}
+    </style>
+</head>
+<body>
+    <h2>Adicionar Itens à Lista</h2>
+    <input type="text" id="itemInput" placeholder="Digite um item">
+    <button onclick="adicionarItem()">Adicionar</button>
+    <ol id="listaOrdenada"></ol>
+
+    <script>
+        let lista = [];
+
+        function adicionarItem() {
+            const input = document.getElementById('itemInput');
+            const valor = input.value.trim();
+
+            if (valor) {
+                lista.push(valor);
+                lista.sort();
+                atualizarLista();
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function atualizarLista() {
+            const listaOrdenada = document.getElementById('listaOrdenada');
+            listaOrdenada.innerHTML = '';
+            lista.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                listaOrdenada.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
