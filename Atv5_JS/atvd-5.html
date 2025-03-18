@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="atvd-5.css" >
+    <title>Formulário de Cadastro</title>
+    <script>
+        class Pessoa {
+            constructor(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula){
+                this.nome = nome;
+                this.email = email;
+                this.dataNascimento = dataNascimento;
+                this.telefoneFixo = telefoneFixo;
+                this.telefoneCelular = telefoneCelular;
+                this.matricula = matricula;
+            }
+        }
+
+        class Aluno extends Pessoa {
+            constructor(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula, curso){
+                super(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula);
+                this.curso = curso;
+            }
+        }
+
+        class Professor extends Pessoa {
+            constructor(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula, area, lattes){
+                super(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula)
+                this.area = area;
+                this.lattes = lattes;
+            }
+        }
+
+        function atualizarFormulario(){
+            var tipo = document.querySelector('input[name="tipo"]:checked').value;
+            document.getElementById("alunoCampos").classList.toggle("hidden", tipo !== "Aluno");
+            document.getElementById("professorCampos").classList.toggle("hidden", tipo !== "Professor");
+        }
+
+        
+        function redefinirFormulario() {
+            document.getElementById("nome").value = "";
+            document.getElementById("dataNascimento").value = "";
+            document.getElementById("telefoneFixo").value = "";
+            document.getElementById("telefoneCelular").value = "";
+            document.querySelector('input[name="tipo"]').value = "Aluno"; 
+            document.getElementById("matricula").value = "";
+            document.getElementById("resultado").innerHTML = ""; 
+        
+            atualizarFormulario();
+        }
+
+
+        function enviarFormulario(){
+            event.preventDefault();
+
+            var nome = document.getElementById("nome").value;
+            var email = document.getElementById("email").value;
+            var dataNascimento = document.getElementById("dataNascimento").value;
+            var telefoneFixo = document.getElementById("telefoneFixo").value;
+            var telefoneCelular = document.getElementById("telefoneCelular").value;
+            var matricula = document.getElementById("matricula").value;
+            var tipo = document.querySelector('input[name="tipo"]:checked').value;
+
+            let pessoa;
+            if(tipo === "Aluno") {
+                var curso = document.getElementById("curso").value;
+                pessoa = new Aluno(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula, curso)
+            } else {
+                var area = document.getElementById("area").value;
+                var lattes = document.getElementById("lattes").value;
+                pessoa = new Professor(nome, email, dataNascimento, telefoneFixo, telefoneCelular, matricula, area, lattes);
+            }
+
+            var resultado = `<strong>Dados Enviados:</strong><br>
+                            Nome: ${pessoa.nome}<br>
+                            Data de Nascimento: ${pessoa.dataNascimento}<br>
+                            Email: ${pessoa.email}<br>
+                            Telefone Fixo: ${pessoa.telefoneFixo}<br>
+                            Telefone Celular: ${pessoa.telefoneCelular}<br>
+                            Matricula: ${pessoa.matricula}<br>
+                            Tipo: ${tipo}<br>
+                            ${tipo === "Aluno" ? `Matrícula: ${pessoa.matricula}` : `Curso: ${pessoa.curso}`}`;
+            
+            document.getElementById("resultado").innerHTML = resultado;
+        }
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2>Cadastro</h2>
+    <form onsubmit="enviarFormulario(event)">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required><br><br>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="email.com" required><br><br>
+
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" required><br><br>
+
+        <label for="telefoneFixo">Telefone Fixo:</label>
+        <input type="tel" id="telefoneFixo" placeholder="(XX) XXXX-XXXX"><br><br>
+
+        <label for="telefoneCelular">Telefone Celular:</label>
+        <input type="tel" id="telefoneCelular" placeholder="(XX) XXXX-XXXX" required><br><br>
+
+        <label for="matricula">Matricula</label>
+        <input type="text" id="matricula" placeholder="Digite sua matrícula" required><br><br>
+
+        <label>Tipo:</label>
+        <div class="radio-group">
+            <input type="radio" name="tipo" value="Aluno" id="tipoAluno" onclick="atualizarFormulario()">
+            <label for="tipoAluno">Aluno</label>
+            <input type="radio" name="tipo" value="Professor" id="tipoProfessor" onclick="atualizarFormulario()">
+            <label for="tipoProfessor">Professor</label>
+        </div>
+
+        <div id="alunoCampos">
+            <label for="curso">Curso:</label>
+            <input type="text" id="curso" placeholder="Digite seu Curso"><br><br>
+        </div>
+
+        <div id="professorCampos">
+            <label for="area">Área:</label>
+            <input type="text" id="area" placeholder="Digite sua área de atuação"><br><br>
+
+            <label for="lattes">Lattes:</label>
+            <input type="text" id="lattes" placeholder="Digite aqui o endereço para seu Lattes"><br><br>
+        </div>
+
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="redefinirFormulario()">Redefinir</button>
+    </form>
+
+    <div id="resultado" style="margin-top:20px;"></div>
+</div>
+</body>
+</html>
